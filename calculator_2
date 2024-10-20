@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Cost Estimator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .container {
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="checkbox"], input[type="range"] {
+            margin-right: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            background-color: #2F41FF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #1f2d9f;
+        }
+        .estimate {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Project Cost Estimator</h1>
+
+        <form id="estimateForm">
+            <!-- Project Type -->
+            <label>Type of project (Check all that apply):</label>
+            <input type="checkbox" value="10000" class="project-type" data-label="Mobile App (iOS)" id="ios"> iOS App (iOS: $10k)<br>
+            <input type="checkbox" value="8000" class="project-type" data-label="Mobile App (Android)" id="android"> Android App (Android: $8k)<br>
+            <input type="checkbox" value="10000" class="project-type" data-label="Web Application" id="webapp"> Web Application ($10k)<br>
+            <input type="checkbox" value="15000" class="project-type" data-label="Desktop Application" id="desktop"> Desktop Application ($15k)
+
+            <!-- Features -->
+            <label>Features (Select all that apply):</label>
+            <input type="checkbox" value="3000" class="feature"> User authentication/login ($3k)<br>
+            <label>API Integration (1-10): <span id="apiValue">1</span></label>
+            <input type="range" id="apiSlider" class="slider" min="1" max="10" value="1"><br>
+            <input type="checkbox" value="3000" class="feature"> Payment gateway ($3k)<br>
+            <input type="checkbox" value="2000" class="feature"> Database setup ($2k)<br>
+            <input type="checkbox" value="2500" class="feature"> Admin panel ($2.5k)<br>
+            <input type="checkbox" value="3000" class="feature"> Real-time chat ($3k)<br>
+            <input type="checkbox" value="1500" class="feature"> Social media integration ($1.5k)<br>
+            <input type="checkbox" value="5000" class="feature"> AI Integration ($5k)<br>
+            <label>Multiple Users (1-5): <span id="usersValue">1</span></label>
+            <input type="range" id="usersSlider" class="slider" min="1" max="5" value="1">
+
+            <!-- Design -->
+            <label>Design (Select all that apply):</label>
+            <input type="checkbox" value="3500" class="design"> UX/Wireframe needed ($3.5k)<br>
+            <input type="checkbox" value="6000" class="design"> Pixel-Perfect UI needed ($6k)<br>
+            <input type="checkbox" value="2000" class="design"> Landing Page needed ($2k)<br>
+            <input type="checkbox" value="1500" class="design"> Logo/Branding needed ($1.5k)<br>
+            <input type="checkbox" value="1500" class="design"> App Store(s) Setup needed ($1.5k)
+
+            <!-- Timeline -->
+            <label>Project Timeline:</label>
+            <select id="timeline">
+                <option value="0">Flexible, 3-4 months ($0)</option>
+                <option value="10000">Expedited, 2-3 months ($10k)</option>
+            </select>
+
+            <!-- Complexity -->
+            <label>Overall Project Complexity (1-10): <span id="complexityValue">1</span></label>
+            <input type="range" id="complexitySlider" class="slider" min="1" max="10" value="1">
+
+            <!-- Email, Phone Number, Website -->
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" placeholder="Enter your email">
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" placeholder="Enter your phone number">
+
+            <label for="website">Website (Optional):</label>
+            <input type="url" id="website" placeholder="Enter your website URL">
+
+            <!-- Running Total and Submit -->
+            <h2>Total Price: $<span id="totalPrice">0</span></h2>
+            <button type="submit" class="btn">Reach out to me</button>
+        </form>
+    </div>
+
+    <script>
+        // Select necessary elements
+        const totalPriceElement = document.getElementById('totalPrice');
+        const projectTypes = document.querySelectorAll('.project-type');
+        const features = document.querySelectorAll('.feature');
+        const designs = document.querySelectorAll('.design');
+        const apiSlider = document.getElementById('apiSlider');
+        const usersSlider = document.getElementById('usersSlider');
+        const timeline = document.getElementById('timeline');
+        const complexitySlider = document.getElementById('complexitySlider');
+        const apiValue = document.getElementById('apiValue');
+        const usersValue = document.getElementById('usersValue');
+
+        // Function to update total price
+        function updateTotalPrice() {
+            let totalPrice = 0;
+
+            // Sum up checked project types
+            projectTypes.forEach(type => {
+                if (type.checked) totalPrice += parseInt(type.value);
+            });
+
+            // Sum up checked features
+            features.forEach(feature => {
+                if (feature.checked) totalPrice += parseInt(feature.value);
+            });
+
+            // Sum API slider value
+            totalPrice += apiSlider.value * 1500;
+
+            // Sum multiple users slider value
+            totalPrice += usersSlider.value * 2000;
+
+            // Sum up checked design elements
+            designs.forEach(design => {
+                if (design.checked) totalPrice += parseInt(design.value);
+            });
+
+            // Sum timeline value
+            totalPrice += parseInt(timeline.value);
+
+            // Update total price display
+            totalPriceElement.innerText = totalPrice.toFixed(2);
+        }
+
+        // Add event listeners for all changes
+        projectTypes.forEach(type => type.addEventListener('change', updateTotalPrice));
+        features.forEach(feature => feature.addEventListener('change', updateTotalPrice));
+        designs.forEach(design => design.addEventListener('change', updateTotalPrice));
+        apiSlider.addEventListener('input', () => {
+            apiValue.innerText = apiSlider.value;
+            updateTotalPrice();
+        });
+        usersSlider.addEventListener('input', () => {
+            usersValue.innerText = usersSlider.value;
+            updateTotalPrice();
+        });
+        timeline.addEventListener('change', updateTotalPrice);
+        complexitySlider.addEventListener('input', () => {
+            document.getElementById('complexityValue').innerText = complexitySlider.value;
+        });
+
+        // Initialize price on load
+        updateTotalPrice();
+    </script>
+</body>
+</html>
